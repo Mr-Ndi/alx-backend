@@ -1,15 +1,36 @@
 {
-  "name": "0x03-queuing_system_in_js",
+  "name": "queuing_system_in_js",
   "version": "1.0.0",
-  "description": "-> How to run a Redis server on your machine     -> How to run simple operations with the Redis client     -> How to use a Redis client with Node JS for basic operations     -> How to store hash values in Redis     -> How to deal with async operations with Redis     -> How to use Kue as a queue system     -> How to build a basic Express app interacting with a Redis server     -> How to the build a basic Express app interacting with a Redis server and queue",
+  "description": "A queuing system using Redis, Express, and Kue.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "./node_modules/.bin/eslint",
+    "check-lint": "lint [0-9]*.js",
+    "test": "./node_modules/.bin/mocha --require @babel/register --exit",
+    "dev": "nodemon --exec babel-node --presets @babel/preset-env"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "redis": "^4.7.0"
+    "chai-http": "^4.3.0",
+    "express": "^4.17.1",
+    "kue": "^0.11.6",
+    "redis": "^4.0.0" 
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.20.0",
+    "@babel/core": "^7.20.0",
+    "@babel/node": "^7.20.0",
+    "@babel/preset-env": "^7.20.0",
+    "@babel/register": "^7.20.0",
+    "eslint": "^8.0.0", 
+    "eslint-config-airbnb-base": "^15.0.0", 
+    "eslint-plugin-import": "^2.25.0", 
+    "eslint-plugin-jest": "^27.0.0", 
+    "nodemon": "^2.0.20", 
+    "chai": "^4.3.0",
+    "mocha": "^10.0.0", 
+    "request": "^2.88.0",
+    "sinon": "^11.0.0" 
   }
 }
