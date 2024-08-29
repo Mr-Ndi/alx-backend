@@ -1,5 +1,6 @@
-// 1-redis_op.js
+// 2-redis_op_async.js
 import { createClient } from 'redis';
+import { promisify } from 'util';
 
 const client = createClient();
 
@@ -13,6 +14,9 @@ client.on('error', (error) => {
     console.log('Redis client not connected to the server: ' + error);
 });
 
+// Promisify the get method
+const getAsync = promisify(client.get).bind(client);
+
 // Function to set a new school value
 function setNewSchool(schoolName, value) {
     client.set(schoolName, value, (err, reply) => {
@@ -24,23 +28,21 @@ function setNewSchool(schoolName, value) {
     });
 }
 
-// Function to display the value of a school
-function displaySchoolValue(schoolName) {
-    client.get(schoolName, (error, value) => {
-        if (error) {
-            console.error('Error retrieving value:', error);
-        } else {
-            console.log(value); // Log the value to the console
-        }
-    });
+// Function to display the value of a school using async/await
+async function displaySchoolValue(schoolName) {
+    try {
+        const value = await getAsync(schoolName);
+        console.log(value); // Log the value to the console
+    } catch (error) {
+        console.error('Error retrieving value:', error);
+    }
 }
 
-// Connect to the Redis server
-client.connect().then(() => {
-    // Call the functions as specified
-    displaySchoolValue('Holberton'); // Attempt to display value for a key that may not exist
+// Connect to the Redis server and perform operations
+client.connect().then(async () => {
+    await displaySchoolValue('Holberton'); // Attempt to display value for a key that may not exist
     setNewSchool('HolbertonSanFrancisco', '100'); // Set new school value
-    displaySchoolValue('HolbertonSanFrancisco'); // Display the newly set value
+    await displaySchoolValue('HolbertonSanFrancisco'); // Display the newly set value
 
     // Close the connection after operations
     client.quit();
