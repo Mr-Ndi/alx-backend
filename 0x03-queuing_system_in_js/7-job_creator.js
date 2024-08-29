@@ -75,3 +75,43 @@ jobs.forEach((jobData) => {
     console.log(`Notification job ${job.id} ${progress}% complete`);
   });
 });
+
+// Array of blacklisted phone numbers
+const blacklistedNumbers = [
+  '4153518780',
+  '4153518781'
+];
+
+// Function to send notification
+function sendNotification(phoneNumber, message, job, done) {
+  // Track job progress
+  job.progress(0, 100);
+
+  // Check if the phone number is blacklisted
+  if (blacklistedNumbers.includes(phoneNumber)) {
+    // Fail the job with an error
+    return done(new Error(`Phone number ${phoneNumber} is blacklisted`));
+  }
+
+  // Simulate job processing
+  job.progress(50); // Track progress to 50%
+  console.log(`Sending notification to ${phoneNumber}, with message: ${message}`);
+  
+  // Simulate successful completion
+  done();
+}
+
+// Process jobs in the queue
+queue.process('push_notification_code_2', 2, (job, done) => {
+  const { phoneNumber, message } = job.data;
+  sendNotification(phoneNumber, message, job, done);
+});
+
+// Log job events
+queue.on('job complete', (id) => {
+  console.log(`Notification job #${id} completed`);
+});
+
+queue.on('job failed', (id, error) => {
+  console.log(`Notification job #${id} failed: ${error.message}`);
+});
